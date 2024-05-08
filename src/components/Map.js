@@ -21,7 +21,7 @@ const TrackingMap = ({
                 <Marker
                     key={index}
                     position={stop}
-                    label={String.fromCharCode(65 + index)} // Displaymarkers as A, B, C, ...
+                    label={String.fromCharCode(65 + index)}
                     title={stop.name}
                     icon={{
                         path: "M10 0a10 10 0 1 0 0 20a10 10 0 1 0 0-20",
@@ -52,7 +52,7 @@ const TrackingMap = ({
             )}
             {eta && (
                 <Marker
-                    position={stops[1]} // Display ETA marker at the next stop
+                    position={stops[1]}
                     label={formatTime(eta)}
                     icon={{
                         url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',

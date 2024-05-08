@@ -18,6 +18,7 @@ const App = ({ google }) => {
   const [eta, setEta] = useState(null);
 
   const [nextStop, setNextStop] = useState('');
+  const [nearNextStop, setNearNextStop] = useState('');
   const [nextStopIndex, setNextStopIndex] = useState(0);
   const [distanceToNextStop, setDistanceToNextStop] = useState('');
   const [timeToNextStop, setTimeToNextStop] = useState('');
@@ -25,7 +26,7 @@ const App = ({ google }) => {
   const trackingMapFunctionalities = () => {
     const directionsService = new google.maps.DirectionsService();
     const placesService = new google.maps.places.PlacesService(
-      document.createElement('div') // Create a temporary element to initialize the Places service
+      document.createElement('div') // temporary element to initialize the Places service
     );
 
     const origin = stops[0]; // Starting point
@@ -46,9 +47,6 @@ const App = ({ google }) => {
 
     placesService.textSearch({ query: 'restaurants' }, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        // Process the results from the Places service
-        console.log(results);
-        // Use the averageSpeed variable
         const estimatedTime = getEstimatedTime(google, results, averageSpeed);
         console.log("Estimated time to arrive to near place:", estimatedTime);
       }
@@ -60,24 +58,21 @@ const App = ({ google }) => {
         if (result.routes && result.routes.length > 0) {
           const nextStep = result.routes[0].legs[0]; // Next step/leg of the route
           const distance = nextStep.distance.value; // Distance to next stop in meters
-          console.log("Distance to next stop:", distance);
-          console.log("Distance in kilometers:", distance / 1000); //Distance in Km
           const duration = nextStep.duration.value; // Duration to next stop in seconds
 
           const estimatedArrivalTime = new Date().getTime() + duration * 1000; // Estimated arrival time in milliseconds
           setEta(estimatedArrivalTime);
 
+          setNearNextStop(nextStep.end_address); // next stop address
+          const nextStop = stops[nextStopIndex].name; // Next stop name from the stops array
+          setNextStop(nextStop);
+          setDistanceToNextStop((distance / 1000).toFixed(1)); // Distance to next stop in kilometers
 
-          setNextStop(nextStep.end_address); // Set the next stop address
-          //const nextStop = stops[nextStopIndex].name; // Next stop name from the stops array
-          //setNextStop(nextStop); // Set the next stop name
-          setDistanceToNextStop((distance / 1000).toFixed(1)); // Set the distance to next stop in kilometers
-
-          const estimatedTime = distance / (averageSpeed * 1000 / 60); // Calculate estimated time in minutes
+          const estimatedTime = distance / (averageSpeed * 1000 / 60); // Estimated time in minutes
           setTimeToNextStop(Math.ceil(estimatedTime)); // Round up to the nearest minute
 
           const updateEtaInterval = setInterval(() => {
-            const currentTime = new Date().getTime(); // Current time in milliseconds
+            const currentTime = new Date().getTime();
             if (currentTime >= estimatedArrivalTime) {
               clearInterval(updateEtaInterval);
               setEta(null);
@@ -115,6 +110,7 @@ const App = ({ google }) => {
       <TopNav
         stops={stops}
         nextStop={nextStop}
+        nearNextStop={nearNextStop}
         distanceToNextStop={distanceToNextStop}
         timeToNextStop={timeToNextStop}
       />
