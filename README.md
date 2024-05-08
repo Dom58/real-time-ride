@@ -46,4 +46,11 @@ there.
 
 ## Some Screenshots
 ### What you will see after running the app in your browser
+![image](https://github.com/Dom58/real-time-ride/assets/33524053/ef44ca3c-a170-4cbe-bf3d-b0df20a6af9b)
+
+### Video
+https://github.com/Dom58/real-time-ride/assets/33524053/e207b235-9521-4452-b9fc-5872064cd42f
+
+
+
 
